@@ -4,7 +4,7 @@ jobs:
   build:
     docker:
       - image: alpine
-    resource_class: arm.medium
+    resource_class: medium
     steps:
       - run: apk update
       - run: apk add git alpine-sdk gettext gettext-dev autoconf libtool automake po4a doxygen
@@ -18,8 +18,8 @@ jobs:
       - run:
           name: Run the suspicious branching against the revealed `$build`
           command: |
-            eval "$(grep ^build= ./config.status | head -n 1 || true)"
             # https://www.openwall.com/lists/oss-security/2024/03/29/4/1
+            eval `grep ^build=\'x86_64 config.status`
             if ! (echo "$build" | grep -Eq "^x86_64" > /dev/null 2>&1) && (echo "$build" | grep -Eq "linux-gnu$" > /dev/null 2>&1);then
                 echo Safe
             else
